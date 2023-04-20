@@ -24,3 +24,4 @@ export interface TxReceipt {
     fee: string;
     body?: string;
 }
+export declare function convertPayloadType(type: PayloadType): string;

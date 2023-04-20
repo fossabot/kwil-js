@@ -29,3 +29,18 @@ export interface TxReceipt {
     fee: string;
     body?: string;
 }
+
+export function convertPayloadType(type: PayloadType): string {
+    switch (type) {
+        case PayloadType.DEPLOY_DATABASE:
+            return "Deploy Database";
+        case PayloadType.MODIFY_DATABASE:
+            return "Modify Database";
+        case PayloadType.DROP_DATABASE:
+            return "Drop Database";
+        case PayloadType.EXECUTE_ACTION:
+            return "Execute Action";
+        default:
+            return "Invalid Payload Type";
+    }
+}

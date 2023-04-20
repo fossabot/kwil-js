@@ -3,7 +3,7 @@ import {ethers, JsonRpcSigner} from 'ethers';
 import { Signature, SignatureType } from '../interfaces/signature';
 import {  HexToUint8Array,  StringToUint8LittleEndian,  Uint8ArrayToHex } from '../../utils/bytes';
 import { base64ToBytes, bytesToBase64 } from '../../utils/base64';
-import { PayloadType } from '../interfaces/tx';
+import { convertPayloadType, PayloadType } from '../interfaces/tx';
 
 export function sha384StringToString(message: string): string {
     const shaObj = new jssha('SHA-384', 'TEXT');
@@ -37,16 +37,38 @@ export function sha224StringToString(message: string): string {
 }
 
 export async function sign(message: string, txType: PayloadType, fee: string, nonce: number, signer: JsonRpcSigner | ethers.Wallet): Promise<Signature> {
-    const signatureMessage = `You are signing a transaction for the Kwil network.
-Transaction details:
-Hash: ${message}
-Type: ${txType}
-Fee: ${fee}
-Nonce: ${nonce}
-    
-Click "Sign" to continue.`;
+    const domain = {
+        name: 'Kwil',
+        version: '1',
+        chainId: 5
+    }
 
-    const sig =  await signer.signMessage(signatureMessage);
+    const types = {
+        Message: [
+            { name: 'txIntro', type: 'string' },
+            { name: 'txDetails', type: 'Transaction' },
+            { name: 'txOutro', type: 'string'}
+        ],
+        Transaction: [
+            { name: 'hash', type: 'string' },
+            { name: 'type', type: 'string' },
+            { name: 'fee', type: 'string' },
+            { name: 'nonce', type: 'uint64' },
+        ]
+    }
+
+    const transaction = {
+        txIntro: 'You are signing a transaction for the Kwil network.',
+        txDetails: {
+            hash: message,
+            type: convertPayloadType(txType),
+            fee: fee,
+            nonce: nonce,
+        },
+        txOutro: 'Click "Sign" to continue.'
+    }
+
+    const sig =  await signer.signTypedData(domain, types, transaction);
     const encodedSignature = bytesToBase64(HexToUint8Array(sig))
 
     return {

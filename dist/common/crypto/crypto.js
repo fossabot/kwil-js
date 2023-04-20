@@ -17,6 +17,7 @@ const jssha_1 = __importDefault(require("jssha"));
 const signature_1 = require("../interfaces/signature");
 const bytes_1 = require("../../utils/bytes");
 const base64_1 = require("../../utils/base64");
+const tx_1 = require("../interfaces/tx");
 function sha384StringToString(message) {
     const shaObj = new jssha_1.default('SHA-384', 'TEXT');
     shaObj.update(message);
@@ -49,15 +50,35 @@ function sha224StringToString(message) {
 exports.sha224StringToString = sha224StringToString;
 function sign(message, txType, fee, nonce, signer) {
     return __awaiter(this, void 0, void 0, function* () {
-        const signatureMessage = `You are signing a transaction for the Kwil network.
-Transaction details:
-Hash: ${message}
-Type: ${txType}
-Fee: ${fee}
-Nonce: ${nonce}
-    
-Click "Sign" to continue.`;
-        const sig = yield signer.signMessage(signatureMessage);
+        const domain = {
+            name: 'Kwil',
+            version: '1',
+            chainId: 5
+        };
+        const types = {
+            Message: [
+                { name: 'txIntro', type: 'string' },
+                { name: 'txDetails', type: 'Transaction' },
+                { name: 'txOutro', type: 'string' }
+            ],
+            Transaction: [
+                { name: 'hash', type: 'string' },
+                { name: 'type', type: 'string' },
+                { name: 'fee', type: 'string' },
+                { name: 'nonce', type: 'uint64' },
+            ]
+        };
+        const transaction = {
+            txIntro: 'You are signing a transaction for the Kwil network.',
+            txDetails: {
+                hash: message,
+                type: (0, tx_1.convertPayloadType)(txType),
+                fee: fee,
+                nonce: nonce,
+            },
+            txOutro: 'Click "Sign" to continue.'
+        };
+        const sig = yield signer.signTypedData(domain, types, transaction);
         const encodedSignature = (0, base64_1.bytesToBase64)((0, bytes_1.HexToUint8Array)(sig));
         return {
             signature_bytes: encodedSignature,
