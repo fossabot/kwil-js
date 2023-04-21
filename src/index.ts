@@ -2,12 +2,15 @@ import NodeKwil from './node/nodeKwil'
 import WebKwil from './web/webKwil'
 import { PayloadType } from './common/interfaces/tx'
 import { DataType, AttributeType, IndexType } from './common/interfaces/enums'
+import { generateDBID } from './utils/dbid'
+import { TxReceipt as _TxReceipt } from './common/interfaces/tx'
 
-const Types = {
-    PayloadType,
-    DataType,
-    AttributeType,
-    IndexType
+namespace Types {
+    export type TxReceipt = _TxReceipt
 }
 
-export { NodeKwil, WebKwil, Types }
+const Utils = {
+    generateDBID
+}
+
+export { NodeKwil, WebKwil, Types, Utils }

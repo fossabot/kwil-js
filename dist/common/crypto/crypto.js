@@ -48,8 +48,9 @@ function sha224StringToString(message) {
     return shaObj.getHash('HEX');
 }
 exports.sha224StringToString = sha224StringToString;
-function sign(message, txType, fee, nonce, signer) {
+function sign(message, signer) {
     return __awaiter(this, void 0, void 0, function* () {
+<<<<<<< HEAD
         const domain = {
             name: 'Kwil',
             version: '1',
@@ -79,6 +80,9 @@ function sign(message, txType, fee, nonce, signer) {
             txOutro: 'Click "Sign" to continue.'
         };
         const sig = yield signer.signTypedData(domain, types, transaction);
+=======
+        const sig = yield signer.signMessage((0, base64_1.base64ToBytes)(message));
+>>>>>>> main
         const encodedSignature = (0, base64_1.bytesToBase64)((0, bytes_1.HexToUint8Array)(sig));
         return {
             signature_bytes: encodedSignature,
