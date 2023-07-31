@@ -1,4 +1,6 @@
 # Kwil-JS
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkwilteam%2Fkwil-js.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkwilteam%2Fkwil-js?ref=badge_shield)
+
 
 Kwil-JS is a JavaScript/Typescript SDK for building web applications to interact with the Kwil network.
 ## Installation
@@ -189,3 +191,6 @@ const token = await kwil.funder.getTokenAddress()
 const balance = await kwil.funder.getBalance("0xAfFDC06cF34aFD7D5801A13d48C92AD39609901D")
 // balance: BigNumber { _hex: '0x00', _isBigNumber: true }
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkwilteam%2Fkwil-js.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkwilteam%2Fkwil-js?ref=badge_large)
